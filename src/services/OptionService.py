@@ -1,4 +1,5 @@
 from importlib import import_module
+from random import shuffle
 
 BASE_SERVICE = import_module('services.BaseService')
 OPTION_ENTITY = import_module('entities.Option')
@@ -49,7 +50,7 @@ class OptionService(BASE_SERVICE.BaseService):
             if len(row) == 0:
                 return []
 
-            return list(map(
+            options = list(map(
                 lambda op: OPTION_ENTITY.Option(
                     op['option_id'],
                     op['text'],
@@ -57,6 +58,9 @@ class OptionService(BASE_SERVICE.BaseService):
                 ),
                 row
             ))
+
+            shuffle(options)
+            return options
 
     def find_by_id(self, option_id):
         """

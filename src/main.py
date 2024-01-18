@@ -15,7 +15,8 @@ def main():
         option_service = OptionService('Option', conn)
         question_service = QuestionService('Question', conn, option_service)
 
-        print(question_service.find_by_id(5))
+        for q in question_service.find(points=100):
+            print(q)
 
 
 if __name__ == '__main__':
