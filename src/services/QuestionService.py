@@ -52,6 +52,8 @@ class QuestionService(BASE_SERVICE.BaseService):
             query += ' AND "test" = %s'
             prepared_params.append(test)
 
+        query += ' ORDER BY "points" ASC'
+
         with self._conn.execute(query, prepared_params) as cur:
             rows = cur.fetchall()
 
