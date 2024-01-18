@@ -10,11 +10,53 @@ class OptionService(BASE_SERVICE.BaseService):
     """
 
     def find(self,
-             option_id=0,
              text='',
              correct=None,
              question=0):
-        pass
+        """
+        Возвращает варианты ответа, удовлетворяющие заданным условиям
+
+        Параметры:
+            text (str):             текст ответа
+            correct (bool|None):    True - ответ верный, False - ответ неверный
+            question (int):         ID вопроса
+        """
+        query = ('SELECT'
+                 + ' "option_id",'
+                 + ' "text",'
+                 + ' "correct",'
+                 + ' "question"'
+                 + f' FROM "{self._table}"'
+                 + ' WHERE true')
+
+        prepared_params = []
+
+        if text:
+            query += ' AND "text" = %s'
+            prepared_params.append(text)
+
+        if correct is not None:
+            query += ' AND "correct" = %s'
+            prepared_params.append(correct)
+
+        if question != 0:
+            query += ' AND "question" = %s'
+            prepared_params.append(question)
+
+        with self._conn.execute(query, prepared_params) as cur:
+            row = cur.fetchall()
+
+            if len(row) == 0:
+                return []
+
+            return list(map(
+                lambda op: OPTION_ENTITY.Option(
+                    op['option_id'],
+                    op['text'],
+                    op['correct']
+                ),
+                row
+            ))
 
     def find_by_id(self, option_id):
         """

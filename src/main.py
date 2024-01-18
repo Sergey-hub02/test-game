@@ -12,7 +12,9 @@ def main():
         row_factory=dict_row
     ) as conn:
         option_service = OptionService('Option', conn)
-        print(option_service.find_by_id(60))
+
+        for option in option_service.find(question=3):
+            print(option)
 
 
 if __name__ == '__main__':
